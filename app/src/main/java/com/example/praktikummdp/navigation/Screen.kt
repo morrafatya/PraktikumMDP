@@ -51,6 +51,7 @@ sealed class Screen(val route: String) {
      * @see com.app.praktikum_kel1_2.screen.RegisterScreen
      */
     object Register : Screen(route = "register")
+    object CreateNote : Screen(route = "create_note")
 }
 
 

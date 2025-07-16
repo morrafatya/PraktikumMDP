@@ -22,6 +22,7 @@ import com.example.praktikummdp.R
 import com.example.praktikummdp.model.request.LoginRequest
 import com.example.praktikummdp.navigation.Screen
 import com.example.praktikummdp.service.api.ApiClient
+import com.example.praktikummdp.utils.PreferenceManager
 import kotlinx.coroutines.launch
 
 @Composable
@@ -112,6 +113,8 @@ fun LoginScreen(navController: NavController) {
                                     val body = response.body()
 
                                     if (response.isSuccessful && body?.code == 200) {
+                                        val token =body.token
+                                        PreferenceManager.setToken(context,token.toString())
                                         // Login sukses, navigasi ke halaman Home
                                         Toast.makeText(context, "Login berhasil!", Toast.LENGTH_SHORT).show()
                                         navController.navigate(Screen.Home.route) {

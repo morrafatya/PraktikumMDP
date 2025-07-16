@@ -43,7 +43,8 @@ android {
 dependencies {
 
     implementation("androidx.navigation:navigation-compose:2.8.9")
-
+ //new
+    implementation("androidx.datastore:datastore-preferences:1.1.7")
 // Jetpack Compose Core
     implementation("androidx.activity:activity-compose:1.8.2")
     implementation("androidx.compose.material3:material3:1.2.1")

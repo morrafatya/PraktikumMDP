@@ -8,6 +8,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import com.example.praktikum_mdp.Screen.ProfileScreen
+import com.example.praktikummdp.Screen.CreateNoteScreen
 import com.example.praktikummdp.Screen.HomeScreen
 import com.example.praktikummdp.Screen.LoginScreen
 import com.example.praktikummdp.Screen.RegistrasiScreen
@@ -57,6 +58,9 @@ fun SetupNavGraph(navController: NavHostController, modifier: Modifier = Modifie
         // Rute ke halaman Register
         composable(route = Screen.Register.route) {
             RegistrasiScreen(navController)
+        }
+        composable(route = Screen.CreateNote.route){
+            CreateNoteScreen(navController)
         }
     }
 }
