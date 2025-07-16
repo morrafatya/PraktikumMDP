@@ -1,5 +1,6 @@
 package com.example.praktikummdp.Screen
 
+import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -10,19 +11,36 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.praktikummdp.R
+import com.example.praktikummdp.model.request.LoginRequest
 import com.example.praktikummdp.navigation.Screen
+import com.example.praktikummdp.service.api.ApiClient
+import kotlinx.coroutines.launch
 
 @Composable
 fun LoginScreen(navController: NavController) {
+    // State untuk menyimpan input username dan password
     var username by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
 
+    // State untuk menandai apakah terdapat error pada input
+    var usernameError by remember { mutableStateOf(false) }
+    var passwordError by remember { mutableStateOf(false) }
+
+    // State untuk menampilkan indikator loading saat proses login berlangsung
+    var isLoading by remember { mutableStateOf(false) }
+
+    // Utilitas untuk manajemen UI
+    val focusManager = LocalFocusManager.current
+    val context = LocalContext.current
+    val coroutineScope = rememberCoroutineScope()
     Box(
         modifier = Modifier.fillMaxSize()
     ) {
@@ -78,27 +96,60 @@ fun LoginScreen(navController: NavController) {
 
                 Button(
                     onClick = {
-                        navController.navigate(Screen.Home.route)
+                        focusManager.clearFocus() // Tutup keyboard
+                        usernameError = username.isBlank()
+                        passwordError = password.isBlank()
+
+                        // Jika input valid, kirim permintaan login
+                        if (!usernameError && !passwordError) {
+                            isLoading = true
+                            coroutineScope.launch {
+                                try {
+                                    val response = ApiClient.instance.login(
+                                        LoginRequest(username = username, password = password)
+                                    )
+                                    isLoading = false
+                                    val body = response.body()
+
+                                    if (response.isSuccessful && body?.code == 200) {
+                                        // Login sukses, navigasi ke halaman Home
+                                        Toast.makeText(context, "Login berhasil!", Toast.LENGTH_SHORT).show()
+                                        navController.navigate(Screen.Home.route) {
+                                            popUpTo(Screen.Login.route) { inclusive = true }
+                                        }
+                                    } else {
+                                        // Login gagal, tampilkan pesan dari server
+                                        val errorMessage = body?.message ?: response.message()
+                                        Toast.makeText(context, "Gagal: $errorMessage", Toast.LENGTH_LONG).show()
+                                    }
+                                } catch (e: Exception) {
+                                    // Tangani kesalahan (contoh: masalah jaringan)
+                                    isLoading = false
+                                    Toast.makeText(context, "Terjadi kesalahan: ${e.localizedMessage}", Toast.LENGTH_LONG).show()
+                                }
+                            }
+                        }
                     },
                     modifier = Modifier.fillMaxWidth()
                 ) {
                     Text("Login")
-                }
-
-                Spacer(modifier = Modifier.height(8.dp))
-
-                Text(
-                    text = "Belum punya akun? Daftar di sini",
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .clickable {
-                            navController.navigate(Screen.Registrasi.route)
-                        },
-                    textAlign = TextAlign.Center,
-                    color = Color.White
-                )
+                    }
             }
         }
+    }
+    if (isLoading) {
+        AlertDialog(
+            onDismissRequest = {},
+            confirmButton = {},
+            title = { Text("Loading") },
+            text = {
+                Row(verticalAlignment = androidx.compose.ui.Alignment.CenterVertically) {
+                    CircularProgressIndicator(modifier = Modifier.size(24.dp))
+                    Spacer(modifier = Modifier.width(16.dp))
+                    Text("Sedang login...")
+                }
+            }
+            )
     }
 }
 

@@ -1,4 +1,4 @@
-package com.example.praktikummdp.Screen
+package com.example.praktikummdp.hasilpraktikum1
 
 import android.os.Bundle
 import android.widget.Toast
@@ -24,7 +24,7 @@ import com.example.praktikummdp.ui.theme.MyApp
 
 
 
-class MainActivity : ComponentActivity() {
+class MainActivity1 : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()

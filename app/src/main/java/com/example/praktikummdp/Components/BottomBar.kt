@@ -1,9 +1,5 @@
 package com.example.praktikummdp.Components
 
-
-
-import com.example.praktikummdp.navigation.Screen
-
 import androidx.compose.animation.core.FastOutSlowInEasing
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
@@ -23,7 +19,7 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-
+import com.example.praktikummdp.navigation.Screen
 
 // Data class untuk menyimpan item navigasi bawah
 data class BottomNavItem(

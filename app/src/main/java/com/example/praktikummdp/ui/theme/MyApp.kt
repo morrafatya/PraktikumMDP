@@ -36,9 +36,11 @@ fun MyApp(navController: NavHostController) {
 
     // Box sebagai wadah utama layout
     Box(modifier = Modifier.fillMaxSize()) {
+
         // Scaffold menyusun struktur layout utama aplikasi (topBar, bottomBar, dan konten)
         Scaffold(
             containerColor = Color.Transparent, // Latar belakang transparan
+
             // Bottom bar hanya muncul di halaman Home dan Profile
             bottomBar = {
                 if (showBottomBar) {
@@ -55,6 +57,6 @@ fun MyApp(navController: NavHostController) {
                 navController = navController,
                 modifier = Modifier.padding(contentPadding) // Menyesuaikan padding dari Scaffold
             )
-            }
         }
+    }
 }

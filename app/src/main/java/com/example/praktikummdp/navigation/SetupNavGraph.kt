@@ -3,37 +3,60 @@ package com.example.praktikummdp.navigation
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.navigation.navArgument
+import com.example.praktikum_mdp.Screen.ProfileScreen
 import com.example.praktikummdp.Screen.HomeScreen
 import com.example.praktikummdp.Screen.LoginScreen
 import com.example.praktikummdp.Screen.RegistrasiScreen
 import com.example.praktikummdp.Screen.ResultScreen
-import com.example.praktikummdp.Screen.WelcomeScreen
 
 
+/**
+ * Fungsi `SetupNavGraph` digunakan untuk mengatur struktur navigasi di aplikasi.
+ * Di dalamnya didefinisikan semua halaman yang dapat dinavigasi beserta argumen yang dibutuhkan (jika ada).
+ *
+ * @param navController controller yang digunakan untuk melakukan navigasi antar halaman.
+ * @param modifier modifier opsional untuk styling tambahan pada `NavHost`.
+ */
 @Composable
 fun SetupNavGraph(navController: NavHostController, modifier: Modifier = Modifier) {
     NavHost(
         navController = navController,
-        startDestination = Screen.Login.route,
+        startDestination = Screen.Register.route, // Halaman pertama saat aplikasi dijalankan
         modifier = modifier
     ) {
-        composable(Screen.Login.route) {
-            LoginScreen(navController)
-        }
-        composable(Screen.Registrasi.route) {
-            RegistrasiScreen(navController)
-        }
-        composable(Screen.Home.route) {
+        // Rute ke halaman Home
+        composable(route = Screen.Home.route) {
             HomeScreen(navController)
         }
-        composable(Screen.Result.route + "/{name}") { backStackEntry ->
-            val name = backStackEntry.arguments?.getString("name") ?: ""
-            ResultScreen(name = name, navController = navController)
+
+        // Rute ke halaman Result dengan parameter "text"
+        composable(
+            route = Screen.Result.route,
+            arguments = listOf(navArgument("text") {
+                type = NavType.StringType // Parameter bertipe String
+            })
+        ) { backStackEntry ->
+            val name = backStackEntry.arguments?.getString("text").orEmpty()
+            ResultScreen(name, navController)
         }
-        composable(Screen.Profile.route) {
-            WelcomeScreen()
+
+        // Rute ke halaman Profile
+        composable(route = Screen.Profile.route) {
+            ProfileScreen(navController)
+        }
+
+        // Rute ke halaman Login
+        composable(route = Screen.Login.route) {
+            LoginScreen(navController)
+        }
+
+        // Rute ke halaman Register
+        composable(route = Screen.Register.route) {
+            RegistrasiScreen(navController)
         }
     }
 }
